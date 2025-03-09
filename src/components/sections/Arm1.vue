@@ -247,7 +247,8 @@ video {
 }
 
 .caption {
-  margin-top: auto;
+  margin-top: 0px;
+  margin-bottom: 5px; 
   text-align: center;
   font-size: 22px;
   color: black;
