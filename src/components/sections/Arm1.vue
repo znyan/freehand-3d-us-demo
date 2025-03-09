@@ -96,7 +96,7 @@ export default {
     onMounted(async () => {
       try {
         // imu
-        const jsonResponse = await fetch('/freehand-3d-us-demo/public/result/arm_160/160.json');
+        const jsonResponse = await fetch('/freehand-3d-us-demo/result/arm_160/160.json');
         const data = await jsonResponse.json();
 
         const x = [];
@@ -190,7 +190,7 @@ export default {
         <div class="element-container">
           <el-container class="video-container">
             <video controls muted preload playsinline>
-              <source src="/freehand-3d-us-demo/result/arm_160/160.mp4" type="video/mp4">
+              <source src="/result/arm_160/video.mp4" type="video/mp4">
             </video>
           </el-container>
         </div>
@@ -198,7 +198,7 @@ export default {
 
       <!-- ground truth -->
       <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
-        <p class="caption">超声扫查序列</p>
+        <p class="caption">真实重建容积</p>
         <div class="element-container">
           <canvas id="gl-gt"></canvas>
         </div>
@@ -206,7 +206,7 @@ export default {
 
       <!-- prediction -->
       <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
-        <p class="caption">超声扫查序列</p>
+        <p class="caption">预测重建容积</p>
         <div class="element-container">
           <canvas id="gl-pred"></canvas>
         </div>
@@ -235,7 +235,8 @@ export default {
 iframe,
 video {
   aspect-ratio: inherit;
-  width: 100%;
+  height: 260px;
+  width: 248px;
   display: block;
   object-fit: fill;
 }
