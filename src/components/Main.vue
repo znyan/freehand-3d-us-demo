@@ -17,45 +17,24 @@ import Latex from './sections/Latex.vue'
 import Model3D from './sections/Model3D.vue'
 import GaussianSplats3D from './sections/GaussianSplats3D.vue'
 
+import Introduction from './sections/Introduction.vue'
+import Arm1 from './sections/Arm1.vue'
+import Carotid1 from './sections/Carotid1.vue'
+
 export default {
   components: {
     Title,
-    Abstract,
-    Markdown,
-    BibTeX,
-    Carousel,
-    Video,
-    ImageSlider,
-    ImageSliderInner,
-    ImageSelector,
-    Echart,
-    Collapse,
-    Table,
-    SeletionForComparison,
-    Comment,
-    Latex,
-    Model3D,
-    GaussianSplats3D
+    Introduction,
+    Arm1,
+    Carotid1,
   }
 }
 </script>
 
+
 <template>
   <Title/>
-  <Carousel/>
-  <Video/>
-  <Abstract/>
-  <Markdown/>
-  <Latex/>
-  <Table/>
-  <Collapse/>
-  <Echart/>
-  <Model3D/>
-  <GaussianSplats3D/>
-  <SeletionForComparison/>
-  <ImageSliderInner/>
-  <ImageSlider/>
-  <ImageSelector/>
-  <BibTeX/>
-  <Comment/>
+  <Introduction/>
+  <Arm1/>
+  <Carotid1/>
 </template>

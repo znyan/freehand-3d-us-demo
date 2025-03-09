@@ -13,18 +13,14 @@ const links = {
   
   <div class="bg">
     
-    <el-watermark :content="['JunyaoHu', 'Academic Project', 'Page Template']" :gap="['60','0']" :z-index="0">
+    <el-watermark :content="['自由式三维超声重建示例页面']" :gap="['60','0']" :z-index="0">
       <el-row justify="center">
         <p class="footer">
-          This template is inspired by 
-          <a :href="links.Nerfies">Nerfies</a>,<br/>
-          
-          powered by 
-          <a :href="links.Vue">Vue</a>, 
-          <a :href="links.Vite">Vite</a>, and
-          <a :href="links.ElementPlus">Element Plus</a>.<br/>
-          
-          You can fork🛠️ / star✨/ PR📃 from <a :href="links.template">here</a>.
+          本页面由
+          <a :href="links.Vue">Vue</a>、
+          <a :href="links.Vite">Vite</a>、
+          <a :href="links.ElementPlus">Element Plus</a>
+          强力驱动
         </p>
       </el-row>
     </el-watermark>
