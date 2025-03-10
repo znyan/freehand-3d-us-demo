@@ -18,15 +18,15 @@ import Model3D from './sections/Model3D.vue'
 import GaussianSplats3D from './sections/GaussianSplats3D.vue'
 
 import Introduction from './sections/Introduction.vue'
+import ProbeBracket from './sections/ProbeBracket.vue'
 import Arm1 from './sections/Arm1.vue'
-import Carotid1 from './sections/Carotid1.vue'
 
 export default {
   components: {
     Title,
     Introduction,
+    ProbeBracket,
     Arm1,
-    Carotid1,
   }
 }
 </script>
@@ -35,6 +35,6 @@ export default {
 <template>
   <Title/>
   <Introduction/>
+  <ProbeBracket/>
   <Arm1/>
-  <Carotid1/>
 </template>

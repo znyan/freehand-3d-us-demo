@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@itk-wasm/image-io": "^1.6.0",
+    "@janelia/web-vol-viewer": "^1.9.0",
+    "@kitware/vtk.js": "^32.10.0",
     "@mdx-js/rollup": "^3.1.0",
     "@mkkellogg/gaussian-splats-3d": "^0.4.6",
     "@niivue/niivue": "^0.51.0",
@@ -21,7 +24,6 @@
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
     "swiper": "^10.3.1",
-    "three": "^0.174.0",
     "vatex": "^0.1.0",
     "video.js": "^8.21.0",
     "vite-plugin-cross-origin-isolation": "^0.1.6",

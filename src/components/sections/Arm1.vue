@@ -12,7 +12,25 @@ import {
 import VChart, { THEME_KEY } from 'vue-echarts';
 import { ref, provide, onMounted } from 'vue';
 import { vue3dLoader } from "vue-3d-loader";
-import { Niivue } from "@niivue/niivue";
+
+import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor'
+import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper'
+
+import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
+import vtkHttpDataSetReader from '@kitware/vtk.js/IO/Core/HttpDataSetReader';
+import vtkImageMarchingCubes from '@kitware/vtk.js/Filters/General/ImageMarchingCubes';
+
+import '@kitware/vtk.js/favicon'
+import '@kitware/vtk.js/Rendering/Profiles/Geometry'
+import '@kitware/vtk.js/IO/Core/DataAccessHelper/HtmlDataAccessHelper'
+import '@kitware/vtk.js/IO/Core/DataAccessHelper/HttpDataAccessHelper'
+import '@kitware/vtk.js/IO/Core/DataAccessHelper/JSZipDataAccessHelper'
+
+import '@kitware/vtk.js/Common/Core/StringArray'
+import '@kitware/vtk.js/Common/DataModel/PolyData'
+
+import '@kitware/vtk.js/Rendering/OpenGL/RenderWindow'
+import '@kitware/vtk.js/Rendering/WebGPU/RenderWindow'
 
 use([
   CanvasRenderer,
@@ -93,6 +111,83 @@ export default {
     const option_ang_y = ref(generateOption('IMU 欧拉角 Y'));
     const option_ang_z = ref(generateOption('IMU 欧拉角 Z'));
 
+
+    const initRealVolume = () => {
+      const container = document.getElementById('vtkRenderContainer-real');
+      const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
+        container: container,
+        background: [0, 0, 0],
+      });
+      const renderWindow = fullScreenRenderWindow.getRenderWindow();
+      const renderer = fullScreenRenderWindow.getRenderer();
+
+      // fullScreenRenderWindow.addController(controlPanel);
+
+      const actor = vtkActor.newInstance();
+      const mapper = vtkMapper.newInstance();
+      const marchingCube = vtkImageMarchingCubes.newInstance({
+        contourValue: 0.0,
+        computeNormals: true,
+        mergePoints: true,
+      });
+
+      actor.setMapper(mapper);
+      mapper.setInputConnection(marchingCube.getOutputPort());
+
+      const reader = vtkHttpDataSetReader.newInstance({ fetchGzip: true });
+      marchingCube.setInputConnection(reader.getOutputPort());
+
+      reader.setUrl(`https://kitware.github.io/vtk-js/data/volume/headsq.vti`, { loadData: true }).then(() => {
+          const data = reader.getOutputData();
+          const dataRange = data.getPointData().getScalars().getRange();
+          const firstIsoValue = (dataRange[0] + dataRange[1]) / 3;
+
+          marchingCube.setContourValue(firstIsoValue);
+          renderer.addActor(actor);
+          renderer.getActiveCamera().set({ position: [1, 1, 0], viewUp: [0, 0, -1] });
+          renderer.resetCamera();
+          renderWindow.render();
+        });
+    }
+
+    const initFakeVolume = () => {
+      const container = document.getElementById('vtkRenderContainer-fake');
+      const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
+        container: container,
+        background: [0, 0, 0],
+      });
+      const renderWindow = fullScreenRenderWindow.getRenderWindow();
+      const renderer = fullScreenRenderWindow.getRenderer();
+
+      // fullScreenRenderWindow.addController(controlPanel);
+
+      const actor = vtkActor.newInstance();
+      const mapper = vtkMapper.newInstance();
+      const marchingCube = vtkImageMarchingCubes.newInstance({
+        contourValue: 0.0,
+        computeNormals: true,
+        mergePoints: true,
+      });
+
+      actor.setMapper(mapper);
+      mapper.setInputConnection(marchingCube.getOutputPort());
+
+      const reader = vtkHttpDataSetReader.newInstance({ fetchGzip: true });
+      marchingCube.setInputConnection(reader.getOutputPort());
+
+      reader.setUrl(`https://kitware.github.io/vtk-js/data/volume/headsq.vti`, { loadData: true }).then(() => {
+          const data = reader.getOutputData();
+          const dataRange = data.getPointData().getScalars().getRange();
+          const firstIsoValue = (dataRange[0] + dataRange[1]) / 3;
+
+          marchingCube.setContourValue(firstIsoValue);
+          renderer.addActor(actor);
+          renderer.getActiveCamera().set({ position: [1, 1, 0], viewUp: [0, 0, -1] });
+          renderer.resetCamera();
+          renderWindow.render();
+        });
+    }
+
     onMounted(async () => {
       try {
         // imu
@@ -120,13 +215,8 @@ export default {
           option_ang_z.value.series[i].data = data[k].map(item => item[5]);
         }
 
-        const nv_gt = new Niivue()
-        nv_gt.attachTo('gl-gt')
-        nv_gt.loadVolumes([{ url: "/freehand-3d-us-demo/result/arm_160/160_real.nii.gz" }])
-
-        const nv_pred = new Niivue()
-        nv_pred.attachTo('gl-pred')
-        nv_pred.loadVolumes([{ url: "/freehand-3d-us-demo/result/arm_160/160_fake.nii.gz" }])
+        initRealVolume();
+        initFakeVolume();
 
       } catch (error) {
         console.error(error);
@@ -199,16 +289,16 @@ export default {
       <!-- ground truth -->
       <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
         <p class="caption">真实重建容积</p>
-        <div class="element-container">
-          <canvas id="gl-gt"></canvas>
+        <div class="volume-container">
+          <div id="vtkRenderContainer-real"></div>
         </div>
       </el-col>
 
       <!-- prediction -->
       <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
         <p class="caption">预测重建容积</p>
-        <div class="element-container">
-          <canvas id="gl-pred"></canvas>
+        <div class="volume-container">
+          <div id="vtkRenderContainer-fake"></div>
         </div>
       </el-col>
 
@@ -227,18 +317,16 @@ export default {
 .video-container {
   margin: 0;
   width: 100%;
-  height: 250px; 
-  min-height: 300px; 
-  overflow: hidden; 
+  height: 250px;
+  overflow: hidden;
 }
 
 iframe,
 video {
   aspect-ratio: inherit;
-  height: 260px;
-  width: 248px;
   display: block;
   object-fit: fill;
+  aspect-ratio: 248 / 260;
 }
 
 .equal-height-row {
@@ -248,11 +336,15 @@ video {
 
 .caption {
   margin-top: 0px;
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
   text-align: center;
   font-size: 22px;
   color: black;
   font-weight: bold;
+}
+
+.volume-container {
+  position: relative;
 }
 
 </style>
