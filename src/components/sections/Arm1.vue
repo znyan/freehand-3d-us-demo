@@ -113,7 +113,7 @@ export default {
 
 
     const initRealVolume = () => {
-      const container = document.getElementById('vtkRenderContainer-real');
+      const container = document.getElementById('vtk-container-real');
       const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
         container: container,
         background: [0, 0, 0],
@@ -151,7 +151,7 @@ export default {
     }
 
     const initFakeVolume = () => {
-      const container = document.getElementById('vtkRenderContainer-fake');
+      const container = document.getElementById('vtk-container-fake');
       const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
         container: container,
         background: [0, 0, 0],
@@ -249,21 +249,21 @@ export default {
     <el-row justify="center" class="equal-height-row" gutter="20">
 
       <!-- chart -->
-      <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+      <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
         <div class="element-container">
           <v-chart class="chart" :option="option_acc_x" autoresize />
           <v-chart class="chart" :option="option_ang_x" autoresize />
         </div>
       </el-col>
 
-      <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+      <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
         <div class="element-container">
           <v-chart class="chart" :option="option_acc_y" autoresize />
           <v-chart class="chart" :option="option_ang_y" autoresize />
         </div>
       </el-col>
 
-      <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+      <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
         <div class="element-container">
           <v-chart class="chart" :option="option_acc_z" autoresize />
           <v-chart class="chart" :option="option_ang_z" autoresize />
@@ -275,7 +275,7 @@ export default {
     <el-row justify="center" class="equal-height-row" gutter="20">
 
       <!-- video -->
-      <el-col :xs="24" :sm="6" :md="6" :lg="6" :xl="6">
+      <el-col :xs="24" :sm="5" :md="5" :lg="5" :xl="5">
         <p class="caption">超声扫查序列</p>
         <div class="element-container">
           <el-container class="video-container">
@@ -287,18 +287,18 @@ export default {
       </el-col>
 
       <!-- ground truth -->
-      <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
+      <el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <p class="caption">真实重建容积</p>
-        <div class="volume-container">
-          <div id="vtkRenderContainer-real"></div>
+        <div class="element-container">
+          <div id="vtk-container-real"></div>
         </div>
       </el-col>
 
       <!-- prediction -->
-      <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9">
+      <el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <p class="caption">预测重建容积</p>
-        <div class="volume-container">
-          <div id="vtkRenderContainer-fake"></div>
+        <div class="element-container">
+          <div id="vtk-container-fake"></div>
         </div>
       </el-col>
 
@@ -317,16 +317,15 @@ export default {
 .video-container {
   margin: 0;
   width: 100%;
-  height: 250px;
+  height: 260px;
   overflow: hidden;
 }
 
 iframe,
 video {
-  aspect-ratio: inherit;
-  display: block;
-  object-fit: fill;
   aspect-ratio: 248 / 260;
+  display: block;
+  object-fit: scale-down;
 }
 
 .equal-height-row {
@@ -343,8 +342,9 @@ video {
   font-weight: bold;
 }
 
-.volume-container {
-  position: relative;
+#vtk-container-fake, 
+#vtk-container-real {
+  height: 260px;
 }
 
 </style>
