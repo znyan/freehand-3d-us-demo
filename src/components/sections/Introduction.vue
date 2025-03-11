@@ -16,7 +16,7 @@ import introduction from '../mds/introduction.mdx';
 
     <el-row justify="center">
       <el-col :xs="24" :sm="20" :md="20" :lg="20" :xl="20">
-        <el-image src="/freehand-3d-us-demo/public/introduction.png" fit="cover" class="mt-4" style="width: 100%;" />
+        <el-image src="/introduction.png" fit="cover" class="mt-4" style="width: 100%;" />
       </el-col>
     </el-row>
 
