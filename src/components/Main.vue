@@ -20,6 +20,12 @@ import GaussianSplats3D from './sections/GaussianSplats3D.vue'
 import Introduction from './sections/Introduction.vue'
 import ProbeBracket from './sections/ProbeBracket.vue'
 import Arm1 from './sections/Arm1.vue'
+import Arm2 from './sections/Arm2.vue'
+import Arm3 from './sections/Arm3.vue'
+import Arm4 from './sections/Arm4.vue'
+import Carotid1 from './sections/Carotid1.vue'
+import Carotid2 from './sections/Carotid2.vue'
+import Carotid3 from './sections/Carotid3.vue'
 
 export default {
   components: {
@@ -27,6 +33,12 @@ export default {
     Introduction,
     ProbeBracket,
     Arm1,
+    Arm2,
+    Arm3,
+    Arm4,
+    Carotid1,
+    Carotid2,
+    Carotid3,
   }
 }
 </script>
@@ -37,4 +49,10 @@ export default {
   <Introduction/>
   <ProbeBracket/>
   <Arm1/>
+  <Arm2/>
+  <Arm3/>
+  <Arm4/>
+  <Carotid1/>
+  <Carotid2/>
+  <Carotid3/>
 </template>

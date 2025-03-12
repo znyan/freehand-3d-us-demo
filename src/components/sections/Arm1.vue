@@ -18,6 +18,7 @@ import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper'
 
 import vtkFullScreenRenderWindow from '@kitware/vtk.js/Rendering/Misc/FullScreenRenderWindow';
 import vtkHttpDataSetReader from '@kitware/vtk.js/IO/Core/HttpDataSetReader';
+import vtkXMLImageDataReader from '@kitware/vtk.js/IO/XML/XMLImageDataReader';
 import vtkImageMarchingCubes from '@kitware/vtk.js/Filters/General/ImageMarchingCubes';
 
 import '@kitware/vtk.js/favicon'
@@ -113,7 +114,7 @@ export default {
 
 
     const initRealVolume = () => {
-      const container = document.getElementById('vtk-container-real');
+      const container = document.getElementById('vtk-container-arm-1-real');
       const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
         container: container,
         background: [0, 0, 0],
@@ -134,24 +135,24 @@ export default {
       actor.setMapper(mapper);
       mapper.setInputConnection(marchingCube.getOutputPort());
 
-      const reader = vtkHttpDataSetReader.newInstance({ fetchGzip: true });
+      const reader = vtkXMLImageDataReader.newInstance();
       marchingCube.setInputConnection(reader.getOutputPort());
 
-      reader.setUrl(`https://kitware.github.io/vtk-js/data/volume/headsq.vti`, { loadData: true }).then(() => {
+      reader.setUrl(`/freehand-3d-us-demo/public/result/arm_550/real_volume.vti`, { loadData: true }).then(() => {
           const data = reader.getOutputData();
           const dataRange = data.getPointData().getScalars().getRange();
           const firstIsoValue = (dataRange[0] + dataRange[1]) / 3;
 
           marchingCube.setContourValue(firstIsoValue);
           renderer.addActor(actor);
-          renderer.getActiveCamera().set({ position: [1, 1, 0], viewUp: [0, 0, -1] });
+          renderer.getActiveCamera().set({ position: [-1, -1, 1], viewUp: [0, -1, 0] });
           renderer.resetCamera();
           renderWindow.render();
         });
     }
 
     const initFakeVolume = () => {
-      const container = document.getElementById('vtk-container-fake');
+      const container = document.getElementById('vtk-container-arm-1-fake');
       const fullScreenRenderWindow = vtkFullScreenRenderWindow.newInstance({
         container: container,
         background: [0, 0, 0],
@@ -172,17 +173,17 @@ export default {
       actor.setMapper(mapper);
       mapper.setInputConnection(marchingCube.getOutputPort());
 
-      const reader = vtkHttpDataSetReader.newInstance({ fetchGzip: true });
+      const reader = vtkXMLImageDataReader.newInstance();
       marchingCube.setInputConnection(reader.getOutputPort());
 
-      reader.setUrl(`https://kitware.github.io/vtk-js/data/volume/headsq.vti`, { loadData: true }).then(() => {
+      reader.setUrl(`/freehand-3d-us-demo/public/result/arm_550/fake_volume.vti`, { loadData: true }).then(() => {
           const data = reader.getOutputData();
           const dataRange = data.getPointData().getScalars().getRange();
           const firstIsoValue = (dataRange[0] + dataRange[1]) / 3;
 
           marchingCube.setContourValue(firstIsoValue);
           renderer.addActor(actor);
-          renderer.getActiveCamera().set({ position: [1, 1, 0], viewUp: [0, 0, -1] });
+          renderer.getActiveCamera().set({ position: [-1, -1, 1], viewUp: [0, -1, 0] });
           renderer.resetCamera();
           renderWindow.render();
         });
@@ -191,7 +192,7 @@ export default {
     onMounted(async () => {
       try {
         // imu
-        const jsonResponse = await fetch('/freehand-3d-us-demo/result/arm_160/160.json');
+        const jsonResponse = await fetch('/freehand-3d-us-demo/result/arm_550/imu_data.json');
         const data = await jsonResponse.json();
 
         const x = [];
@@ -250,21 +251,21 @@ export default {
 
       <!-- chart -->
       <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
-        <div class="element-container">
+        <div class="element-container-1">
           <v-chart class="chart" :option="option_acc_x" autoresize />
           <v-chart class="chart" :option="option_ang_x" autoresize />
         </div>
       </el-col>
 
       <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
-        <div class="element-container">
+        <div class="element-container-1">
           <v-chart class="chart" :option="option_acc_y" autoresize />
           <v-chart class="chart" :option="option_ang_y" autoresize />
         </div>
       </el-col>
 
       <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
-        <div class="element-container">
+        <div class="element-container-1">
           <v-chart class="chart" :option="option_acc_z" autoresize />
           <v-chart class="chart" :option="option_ang_z" autoresize />
         </div>
@@ -275,12 +276,12 @@ export default {
     <el-row justify="center" class="equal-height-row" gutter="20">
 
       <!-- video -->
-      <el-col :xs="24" :sm="5" :md="5" :lg="5" :xl="5">
+      <el-col :xs="24" :sm="7" :md="7" :lg="7" :xl="7">
         <p class="caption">超声扫查序列</p>
-        <div class="element-container">
+        <div class="element-container-2">
           <el-container class="video-container">
-            <video controls muted preload playsinline>
-              <source src="/result/arm_160/video.mp4" type="video/mp4">
+            <video controls muted preload autoplay loop playsinline>
+              <source src="/result/arm_550/video.webm" type="video/mp4">
             </video>
           </el-container>
         </div>
@@ -289,16 +290,16 @@ export default {
       <!-- ground truth -->
       <el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <p class="caption">真实重建容积</p>
-        <div class="element-container">
-          <div id="vtk-container-real"></div>
+        <div class="element-container-2">
+          <div id="vtk-container-arm-1-real"></div>
         </div>
       </el-col>
 
       <!-- prediction -->
       <el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <p class="caption">预测重建容积</p>
-        <div class="element-container">
-          <div id="vtk-container-fake"></div>
+        <div class="element-container-2">
+          <div id="vtk-container-arm-1-fake"></div>
         </div>
       </el-col>
 
@@ -318,14 +319,15 @@ export default {
   margin: 0;
   width: 100%;
   height: 260px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 iframe,
 video {
   aspect-ratio: 248 / 260;
   display: block;
-  object-fit: scale-down;
+  margin: 0 auto;
+  object-fit: contain;
 }
 
 .equal-height-row {
@@ -342,8 +344,12 @@ video {
   font-weight: bold;
 }
 
-#vtk-container-fake, 
-#vtk-container-real {
+#vtk-container-arm-1-fake, 
+#vtk-container-arm-1-real {
+  height: 260px;
+}
+
+.element-container {
   height: 260px;
 }
 
